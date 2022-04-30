@@ -1,0 +1,24 @@
+main color:#6b47e6
+text color: #191919
+input grey colr: #f9f9f9
+grey:#808080
+orange :#f78f1e
+best grey:#DCDCDC
+<Text style={styles.paragraph}>I'm in the Drawer!</Text>
+          <Button
+            title="Close drawer"
+            onPress={() => drawer.current.closeDrawer()}
+          />
+<ScrollView styles={styles.body}>
+          <Text styles={styles.title}>Mes Commandes</Text>
+          <Text styles={styles.title}>Mes Commandes</Text>
+          </ScrollView>
+const [email,setEmail]=useState();
+    const [name,setName]=useState();
+    const [phone,setPhone]=useState();
+
+ shadowColor:'#f78f1e',
+        elevation:1,
+        
+        shadowOpacity:1,
+        shadowOffset:{width:0,height:1},
