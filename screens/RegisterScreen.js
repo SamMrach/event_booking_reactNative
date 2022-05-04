@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import {Text,View,StyleSheet, TextInput, Button, TouchableOpacityBase, TouchableOpacity,ImageBackground} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function RegisterScreen() {
     const [name,setName]=useState('sam');
     const [email,setEmail]=useState('');
@@ -10,8 +11,12 @@ export default function RegisterScreen() {
     const navigation = useNavigation();
     const handleSignUp=()=>{
         //alert(email);
-        axios.post('http://10.0.2.2:8000/api/users/',{name:name,email:email,password:password,telephone:phone})
-        .then((res)=>{
+        axios.post('https://printzillas.art/api/users',{name:name,email:email,password:password,telephone:phone})
+        .then(async (res)=>{
+            console.log(res.data);
+            await AsyncStorage.setItem('@username',res.data.name);
+            await AsyncStorage.setItem('@Id',JSON.stringify(res.data.id));
+            
             //alert(res);
             navigation.replace('Profile');
         })

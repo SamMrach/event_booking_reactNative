@@ -7,7 +7,7 @@ export default function Event({id,name,category,description,price,localisation,i
     const [favorite,setFavorite]=useState(false);
     const navigation = useNavigation();
     useEffect(async()=>{
-        //console.log('loaded');
+        console.log('https://printzillas.art/'+image);
         var favArray= await AsyncStorage.getItem('@favoris');
         JSON.parse(favArray);
         //console.log(favArray);
@@ -24,7 +24,7 @@ export default function Event({id,name,category,description,price,localisation,i
         </TouchableOpacity> 
          </View>
          
-         <Image style={styles.thumbnail} source={{uri:"http://10.0.2.2:8000/"+image}}/>
+         <Image style={styles.thumbnail} source={{uri:'https://printzillas.art'+image}}/>
          <TouchableOpacity onPress={()=>{navigation.replace('Event',{id,name,category,description,price,localisation,image,date,id})}} style={styles.details}>
              <Text style={styles.price}>{price} MAD</Text>
              <Text style={styles.name}>{name}</Text>

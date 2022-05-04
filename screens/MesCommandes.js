@@ -8,7 +8,7 @@ import * as WebBrowser from 'expo-web-browser';
 export default function MesCommandes(){
   const [tickets,setTickets]=useState([]);
   const handleDownload=async (id)=>{
-    await WebBrowser.openBrowserAsync("http://10.0.2.2:8000/orders/showTicket/1");
+    await WebBrowser.openBrowserAsync("https://printzillas.art/orders/showTicket/"+id);
     //saveAs("http://10.0.2.2:8000/orders/showTicket/1","ticket.pdf")
     /*axios.get('http://10.0.2.2:8000/api/tickets/download/'+id)
     .then((res)=>{
@@ -20,7 +20,7 @@ export default function MesCommandes(){
   }
   useEffect(async()=>{
     var id=await AsyncStorage.getItem('@Id');
-   axios.get('http://10.0.2.2:8000/api/tickets/myTickets/'+id)
+   axios.get('https://printzillas.art/api/tickets/myTickets/'+id)
    .then((res)=>{
      console.log(res.data);
      setTickets(res.data);
@@ -48,9 +48,9 @@ export default function MesCommandes(){
                   key={index}
                 title={ticket.event_name}
                 subTitle={ticket.event_description}
-                price={"$"+ticket.price}
+                price={"MAD "+ticket.price}
                 image={require("../assets/event1.png")} // OR {{uri:"http://......"}} 
-                buttonText={"télecharger Ticket "}
+                buttonText={"Télecharger Ticket "}
                 buttonColor={"#f78f1e"}
                 onClickButton={() => handleDownload(ticket.id)}
               />

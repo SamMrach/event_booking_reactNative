@@ -14,8 +14,13 @@ export default function Header({myDrawer,name,onSearch}){
         try{
         const profilImage=await AsyncStorage.getItem('@Image');
         JSON.parse(profilImage);
-        console.log(profilImage);
-        profilImage != null ? console.log('est null'):setProfil(profilImage);
+        var length=profilImage.length;
+        var v1=profilImage.slice(1);
+        var v2=v1.slice(0,length-2);
+        //console.log(v2);
+        //console.log(profilImage.slice(0,length-1));
+        
+        profilImage == null ? console.log('est null'):setProfil(v2);
         }catch(err){
             console.log(err)
         }

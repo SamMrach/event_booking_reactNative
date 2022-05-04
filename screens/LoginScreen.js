@@ -14,9 +14,9 @@ export default function LoginScreen() {
             body:JSON.stringify({email,password})
         })*/
         //alert({email:email,password:password});
-     axios.post('http://10.0.2.2:8000/api/users/login',{email:email,password:password})
+     axios.post('https://printzillas.art/api/users/login',{email:email,password:password})
        .then(async (response)=>{
-           //console.log(response.data.user);
+           console.log(response.data.user.photo !== null);
            await AsyncStorage.setItem('@username',response.data.user.name);
            await AsyncStorage.setItem('@Id',JSON.stringify(response.data.user.id));
            if(response.data.user.photo !== null)

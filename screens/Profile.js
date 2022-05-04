@@ -6,26 +6,30 @@ import MyInput from '../Components/MyInput'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import launchImageLibrary from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
+import { Popup } from "popup-ui";
 export default function Profile(){
     const navigation =useNavigation();
     const [email,setEmail]=useState('');
     const [name,setName]=useState('');
     const [phone,setPhone]=useState('');
     const [address,setAddress]=useState('');
-    const [image,setImage]=useState(' ');
+    const [image,setImage]=useState('https://cdn-icons-png.flaticon.com/512/149/149071.png');
     const handleSelectImage=async()=>{
     
      let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         aspect: [4, 3],
+        base64:true,
         quality: 1,			
         allowsEditing: true,
     });
 
-    console.log(result);
+    //console.log(result);
 
     if (!result.cancelled) {
-       setImage(result.uri);
+        const base64ToUpload='data:image/jpeg;base64,'+result.base64;
+        console.log(result.base64);
+       setImage(base64ToUpload);
     }
      /*try{
          
@@ -60,22 +64,32 @@ export default function Profile(){
                 }
             }
             })();
-      axios.get('http://10.0.2.2:8000/api/users/'+id)
+      axios.get('https://printzillas.art/api/users/'+id)
       .then((res)=>{
-          console.log(res.data);
+          //console.log(res.data.photo);
           setEmail(res.data.email);
           setName(res.data.name);
           setPhone(res.data.telephone);
           setAddress(res.data.adress);
-          setImage(res.data.photo);
+          res.data.photo == null ? console.log('pas de photo'):setImage(res.data.photo);
+          //if(res.data.photo !== null)
+          //setImage(res.data.photo);
       })
     },[])
     const handleSubmit=async()=>{
         var id=await AsyncStorage.getItem('@Id');
         //console.log(image);
-        axios.put('http://10.0.2.2:8000/api/users/'+id,{email:email,name:name,telephone:phone,adress:address,photo:image})
+        axios.put('https://printzillas.art/api/users/'+id,{email:email,name:name,telephone:phone,adress:address,photo:image})
         .then((res)=>{
-            console.log(res.data.adress)
+            //console.log(res.data.photo)
+            /*Popup.show({
+                type: 'Success',
+                title: 'Notification',
+                button: true,
+                textBody: 'done',
+                buttonText: 'Ok ',
+                callback: ()=> {navigation.replace('MesCommandes')}
+              })*/
             alert('vous venez de changer vos informations')
         })
         .catch((err)=>{

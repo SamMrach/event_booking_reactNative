@@ -37,7 +37,7 @@ export default function Event({route}){
         user_id=JSON.parse(user_id);
         //console.log(user_id);
         //console.log(id);
-        axios.post('http://10.0.2.2:8000/api/tickets/',{utilisateur_id:user_id,event_id:id})
+        axios.post('https://printzillas.art/api/tickets',{utilisateur_id:user_id,event_id:id})
         .then((res)=>{
           Popup.show({
             type: 'Success',
@@ -63,7 +63,7 @@ export default function Event({route}){
           <Image source={require('../assets/leftarrow.png')} style={styles.leftArrowIcon} /> 
           </TouchableOpacity>
           </View>
-          <Image style={styles.image} source={{uri:"http://10.0.2.2:8000/"+image}} />
+          <Image style={styles.image} source={{uri:'https://printzillas.art'+image}} />
           <View style={styles.details}>
               <Text style={styles.title}>{name}</Text>
               <Text style={styles.category}>{category}</Text>
@@ -82,14 +82,8 @@ export default function Event({route}){
                  <Text style={styles.fadeText}>{price} MAD</Text>
              </View>
             <View style={styles.btns}>
-            <SelectBox
-              label="Quantity"
-              options={K_OPTIONS}
-              value={quantity}
-              onChange={(val)=>{setQuantity(val)}}
-              hideInputFilter={false}
-              width="40%"
-            />
+               
+            
             <TouchableOpacity style={styles.button} onPress={()=>{handleBuy()}}>
               <Text style={styles.textBtn}>Acheter</Text>
             </TouchableOpacity>
@@ -189,13 +183,13 @@ const styles=StyleSheet.create({
           
     },   
     button:{
-            width:Dimensions.get('window').width -250,
+            width:Dimensions.get('window').width -150,
             height:50,
             color:'white',
-            
+            marginHorizontal:60,
             backgroundColor:'#f78f1e',
             borderRadius:25,
-            marginLeft:30,     
+                 
     },
     textBtn:{
         fontSize:20,

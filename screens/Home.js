@@ -19,6 +19,7 @@ export default function Home(){
     //filter favorited events
     const filterFavoris=()=>{
       const favorisEvents=events.filter((event)=>favoris.includes(event.name));
+      drawer.current.closeDrawer();
       setEvents(favorisEvents);
     }
     //toggle favoris
@@ -33,8 +34,9 @@ export default function Home(){
       //await AsyncStorage.setItem('@favoris',JSON.stringify(favoris));
       
     }
+
     const handleClick=(param1)=>{
-      axios.get('http://10.0.2.2:8000/api/events/category/'+param1)
+      axios.get('https://printzillas.art/api/events/category/'+param1)
       .then((res)=>{
          setEvents(res.data);
       })
@@ -43,13 +45,25 @@ export default function Home(){
       })
     }
     const handleSearch=(keyword)=>{
-      axios.get('http://10.0.2.2:8000/api/events/search/'+keyword)
+      if(keyword !== null && keyword !=""){
+        axios.get('https://printzillas.art/api/events/search/'+keyword)
       .then((res)=>{
         setEvents(res.data);
       })
       .catch((err)=>{
         alert(err)
       })
+      }else {
+        alert('essayer avec autre mot');
+      }
+      
+    }
+    // log out
+    const handleLogout=async()=>{
+      await AsyncStorage.removeItem('@Id');
+      await AsyncStorage.removeItem('@username');
+      await AsyncStorage.removeItem('@Image');
+      navigation.replace('LoginScreen');
     }
     useEffect(async()=>{
       if(!loading){
@@ -67,10 +81,17 @@ export default function Home(){
       
        let fullName=await AsyncStorage.getItem('@username');
        setUsername(fullName);
-       let profilImage=await AsyncStorage.getItem('@Image');
-       JSON.parse(profilImage);
-       if(profilImage == null)
-       setImage(profilImage);
+       const profilImage=await AsyncStorage.getItem('@Image');
+        JSON.parse(profilImage);
+        var length=profilImage.length;
+        var v1=profilImage.slice(1);
+        var v2=v1.slice(0,length-2);
+        //console.log(v2);
+        //console.log(profilImage.slice(0,length-1));
+        
+        profilImage == null ? console.log('est null'):setImage(v2);
+       
+       
        setLoading(false);
        try{
           const favArray= await AsyncStorage.getItem('@favoris');
@@ -83,9 +104,9 @@ export default function Home(){
        catch(e){
          alert(e);
        }
-        axios.get('http://10.0.2.2:8000/api/events')
+        axios.get('https://printzillas.art/api/events')
         .then(res=>{
-          console.log(res.data[0].image)
+          //console.log(res.data[0].image)
           
           setEvents(res.data);
           
@@ -108,15 +129,19 @@ export default function Home(){
                <Text style={styles.optionName}>Accueil</Text>
              </TouchableOpacity>
              <TouchableOpacity style={styles.option} onPress={()=>{navigation.replace('Profile')}} >
-               <Image style={styles.optionIcon} source={require('../assets/mesInfo.png')} />
+               <Image style={styles.optionIcon} source={require('../assets/mesInfo1.png')} />
                <Text style={styles.optionName}>Mes Info</Text>
              </TouchableOpacity>
              <TouchableOpacity style={styles.option} onPress={()=>{filterFavoris()}}>
-               <Image style={styles.optionIcon} source={require('../assets/favorite.png')} />
+               <Image style={styles.optionIcon} source={require('../assets/favorite1.png')} />
                <Text style={styles.optionName}>Mes Favoris</Text>
              </TouchableOpacity>
-             <TouchableOpacity style={styles.option} onPress={()=>{navigation.replace('LoginScreen')}} >
-               <Image style={styles.optionIcon} source={require('../assets/favorite.png')} />
+             <TouchableOpacity style={styles.option} onPress={()=>{navigation.replace('MesCommandes')}} >
+               <Image style={styles.optionIcon} source={require('../assets/orders.png')} />
+               <Text style={styles.optionName}>Mes commandes</Text>
+             </TouchableOpacity>
+             <TouchableOpacity style={styles.option} onPress={()=>{handleLogout()}} >
+               <Image style={styles.optionIcon} source={require('../assets/logout.png')} />
                <Text style={styles.optionName}>Déconnecter</Text>
              </TouchableOpacity>
          </View>
