@@ -5,8 +5,10 @@ import {CardTwelve,CardEcomThree} from 'react-native-card-ui';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as WebBrowser from 'expo-web-browser';
+import AnimatedLoader from "react-native-animated-loader";
 export default function MesCommandes(){
   const [tickets,setTickets]=useState([]);
+  const [animatedVisible,setVisible]=useState(false);
   const handleDownload=async (id)=>{
     await WebBrowser.openBrowserAsync("https://printzillas.art/orders/showTicket/"+id);
     //saveAs("http://10.0.2.2:8000/orders/showTicket/1","ticket.pdf")
@@ -20,8 +22,10 @@ export default function MesCommandes(){
   }
   useEffect(async()=>{
     var id=await AsyncStorage.getItem('@Id');
+    setVisible(true);
    axios.get('https://printzillas.art/api/tickets/myTickets/'+id)
    .then((res)=>{
+     setVisible(false)
      console.log(res.data);
      setTickets(res.data);
     }  
@@ -33,6 +37,13 @@ export default function MesCommandes(){
   const navigation = useNavigation();
   return(
       <View style={styles.container}>
+        <AnimatedLoader
+        visible={animatedVisible}
+        overlayColor="rgba(255,255,255,0.75)"
+        animationStyle={styles.lottie}
+        speed={1}>
+        <Text>One Momoent Please...</Text>
+        </AnimatedLoader>
           <View style={styles.header} >
             <TouchableOpacity style={styles.leftArrow} onPress={()=>{navigation.replace('Home')}} >
             <Image source={require('../assets/leftWhite.png')} style={styles.leftIcon}/>
@@ -65,6 +76,10 @@ export default function MesCommandes(){
   )
 }
 const styles=StyleSheet.create({
+  lottie: {
+    width: 100,
+    height: 100,
+  },
     container:{
         width:Dimensions.get('window').width,
         paddingTop:StatusBar.currentHeight,

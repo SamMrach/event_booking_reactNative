@@ -3,17 +3,21 @@ import {Text,View,StyleSheet, TextInput, Button, TouchableOpacityBase, Touchable
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnimatedLoader from "react-native-animated-loader";
 export default function RegisterScreen() {
     const [name,setName]=useState('');
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
     const [phone,setPhone]=useState('');
     const navigation = useNavigation();
+    const [animatedVisible,setVisible]=useState(false);
     const handleSignUp=()=>{
         //alert(email);
+        setVisible(true);
         axios.post('https://printzillas.art/api/users',{name:name,email:email,password:password,telephone:phone})
         .then(async (res)=>{
-            console.log(res.data);
+            setVisible(false);
+            //console.log(res.data);
             await AsyncStorage.setItem('@username',res.data.name);
             await AsyncStorage.setItem('@Id',JSON.stringify(res.data.id));
             
@@ -26,7 +30,13 @@ export default function RegisterScreen() {
     }
     return(
         <ImageBackground style={styles.container} resizeMode="cover" source={require('../assets/background_dot.png')}>
-      
+        <AnimatedLoader
+        visible={animatedVisible}
+        overlayColor="rgba(255,255,255,0.75)"
+        animationStyle={styles.lottie}
+        speed={1}>
+        <Text>One Momoent Please...</Text>
+        </AnimatedLoader>
         <Text style={styles.header}>Create Account</Text> 
         <TextInput style={styles.input} placeholder="Name" 
         label="name"
@@ -62,6 +72,10 @@ export default function RegisterScreen() {
 }
 
 const styles=StyleSheet.create({
+    lottie: {
+        width: 100,
+        height: 100,
+      },
     container:{
         backgroundColor:'#fff',
         flex:1,

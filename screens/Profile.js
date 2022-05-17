@@ -8,6 +8,7 @@ import launchImageLibrary from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Popup } from "popup-ui";
 import {DeviceEventEmitter} from "react-native"
+import AnimatedLoader from "react-native-animated-loader";
 export default function Profile(){
     const navigation =useNavigation();
     const [email,setEmail]=useState('');
@@ -15,6 +16,7 @@ export default function Profile(){
     const [phone,setPhone]=useState('');
     const [address,setAddress]=useState('');
     const [image,setImage]=useState('https://cdn-icons-png.flaticon.com/512/149/149071.png');
+    const [animatedVisible,setVisible]=useState(false);
     const handleSelectImage=async()=>{
     
      let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,6 +58,7 @@ export default function Profile(){
     
     }
     useEffect(async()=>{
+        setVisible(true);
         var id=await AsyncStorage.getItem('@Id');
         (async () => {
             if (Platform.OS !== 'web') {
@@ -67,6 +70,7 @@ export default function Profile(){
             })();
       axios.get('https://printzillas.art/api/users/'+id)
       .then((res)=>{
+          setVisible(false);
           //console.log(res.data.photo);
           setEmail(res.data.email);
           setName(res.data.name);
@@ -79,9 +83,11 @@ export default function Profile(){
     },[])
     const handleSubmit=async()=>{
         var id=await AsyncStorage.getItem('@Id');
+        setVisible(true);
         //console.log(image);
         axios.put('https://printzillas.art/api/users/'+id,{email:email,name:name,telephone:phone,adress:address,photo:image})
         .then(async (res)=>{
+            setVisible(false);
             await AsyncStorage.setItem('@Image',JSON.stringify(res.data.photo));
             const newImage=res.data.photo;
             DeviceEventEmitter.emit("updateProfile", {newImage});
@@ -120,10 +126,21 @@ export default function Profile(){
                 <Text style={styles.btnText}>Enregister </Text>
             </TouchableOpacity>
           </View>
+          <AnimatedLoader
+            visible={animatedVisible}
+            overlayColor="rgba(255,255,255,0.75)"
+            animationStyle={styles.lottie}
+            speed={1}>
+             <Text>One Momoent Please...</Text>
+        </AnimatedLoader>
       </View>
     )
 }
 const styles=StyleSheet.create({
+    lottie: {
+        width: 100,
+        height: 100,
+      },
     container:{
         width:Dimensions.get('window').width,
         height:Dimensions.get('screen').height,

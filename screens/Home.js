@@ -7,7 +7,8 @@ import Event from '../Components/Event'
 import { DrawerLayout } from "react-native-gesture-handler";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DeviceEventEmitter} from "react-native"
+import {DeviceEventEmitter} from "react-native";
+import AnimatedLoader from "react-native-animated-loader";
 //import store from 'react-native-simple-store';
 export default function Home(){
     const drawer = useRef(null);
@@ -17,6 +18,7 @@ export default function Home(){
     const [events,setEvents]=useState([]);
     const [favoris,setFavoris]=useState([]);
     const [loading, setLoading] = useState(true);
+    const [animatedVisible,setVisible]=useState(false);
     DeviceEventEmitter.addListener("updateProfile", (eventData) =>{
       setImage(eventData);
       console.log("event get catched");
@@ -84,7 +86,7 @@ export default function Home(){
 
     useEffect(async() => {
        let isActive = true;
-      
+       setVisible(true);
        try{
           let fullName=await AsyncStorage.getItem('@username');
           setUsername(fullName);
@@ -92,7 +94,6 @@ export default function Home(){
           JSON.parse(imageSetup);
           if(imageSetup  =='true'){
             const profilImage=await AsyncStorage.getItem('@Image');
-          
           var length=profilImage.length;
         var v1=profilImage.slice(1);
         var v2=v1.slice(0,length-2);
@@ -130,7 +131,7 @@ export default function Home(){
          axios.get('https://printzillas.art/api/events')
         .then(res=>{
           //console.log(res.data[0].image)
-          
+          setVisible(false);
           setEvents(res.data);
           return ()=>{isActive=false};
         })
@@ -144,6 +145,7 @@ export default function Home(){
     const navigation =useNavigation();
     const navigationView = () => (
         <View style={[styles.container, styles.navigationContainer]}>
+         
          <View style={styles.header}>
             <Image source={{uri:image}} style={styles.userIcon}></Image>
             <Text style={styles.userName}>{username}</Text>
@@ -204,6 +206,10 @@ export default function Home(){
     )
 }
 const styles=StyleSheet.create({
+  lottie: {
+    width: 100,
+    height: 100,
+  },
     body:{
       backgroundColor:'#f9f9f9',
     },
