@@ -4,10 +4,10 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function RegisterScreen() {
-    const [name,setName]=useState('sam');
+    const [name,setName]=useState('');
     const [email,setEmail]=useState('');
-    const [password,setPassword]=useState('111111');
-    const [phone,setPhone]=useState('0635353535');
+    const [password,setPassword]=useState('');
+    const [phone,setPhone]=useState('');
     const navigation = useNavigation();
     const handleSignUp=()=>{
         //alert(email);

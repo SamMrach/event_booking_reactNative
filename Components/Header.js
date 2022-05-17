@@ -29,14 +29,14 @@ export default function Header({myDrawer,name,onSearch}){
     return (
      <View style={styles.header}>
        <View style={styles.welcome}>
-         <Text style={styles.welcomeText}> Hi, {name}</Text>
+         <Text style={styles.welcomeText}> Bonjour, {name}</Text>
          <TouchableOpacity onPress={()=>{myDrawer.current.openDrawer()}}>
          <Image style={styles.profilImage} source={{uri:profil}} />
          </TouchableOpacity>
          
        </View>
        <View style={styles.search}>
-        <TextInput style={styles.searchInput} value={keyword} placeholder="Search An Event " onChangeText={(text)=>setKeyword(text)}/>
+        <TextInput style={styles.searchInput} value={keyword} placeholder="chercher un événement,artiste " onChangeText={(text)=>setKeyword(text)}/>
         <TouchableOpacity style={styles.searchIcon} onPress={()=>{searchAndEmptyKeyword()}}>
             <Image style={styles.searchImage} source={require('../assets/searchOrange.png')}></Image>
         </TouchableOpacity>

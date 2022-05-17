@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import launchImageLibrary from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Popup } from "popup-ui";
+import {DeviceEventEmitter} from "react-native"
 export default function Profile(){
     const navigation =useNavigation();
     const [email,setEmail]=useState('');
@@ -28,7 +29,7 @@ export default function Profile(){
 
     if (!result.cancelled) {
         const base64ToUpload='data:image/jpeg;base64,'+result.base64;
-        console.log(result.base64);
+        //console.log(result.base64);
        setImage(base64ToUpload);
     }
      /*try{
@@ -80,7 +81,10 @@ export default function Profile(){
         var id=await AsyncStorage.getItem('@Id');
         //console.log(image);
         axios.put('https://printzillas.art/api/users/'+id,{email:email,name:name,telephone:phone,adress:address,photo:image})
-        .then((res)=>{
+        .then(async (res)=>{
+            await AsyncStorage.setItem('@Image',JSON.stringify(res.data.photo));
+            const newImage=res.data.photo;
+            DeviceEventEmitter.emit("updateProfile", {newImage});
             //console.log(res.data.photo)
             /*Popup.show({
                 type: 'Success',

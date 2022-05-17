@@ -37,8 +37,11 @@ export default function Event({route}){
         user_id=JSON.parse(user_id);
         //console.log(user_id);
         //console.log(id);
+        console.log(id);
+        console.log(user_id);
         axios.post('https://printzillas.art/api/tickets',{utilisateur_id:user_id,event_id:id})
         .then((res)=>{
+          //console.log("order done");
           Popup.show({
             type: 'Success',
             title: 'Code Confirmation',
@@ -49,7 +52,7 @@ export default function Event({route}){
           })
         })
         .catch((err)=>{
-          console.log(err)
+          alert(err)
         })
         
       }    
@@ -68,7 +71,7 @@ export default function Event({route}){
               <Text style={styles.title}>{name}</Text>
               <Text style={styles.category}>{category}</Text>
               <Text style={styles.description}>Description</Text>
-              <Text style={styles.body}>{description}</Text>
+              <Text numberOfLines={8} style={styles.body}>{description}</Text>
               <View style={styles.oneRow}>
                  <Image style={styles.icon} source={require('../assets/calendar.png')}/>
                  <Text style={styles.fadeText}>{date}</Text>
@@ -82,8 +85,6 @@ export default function Event({route}){
                  <Text style={styles.fadeText}>{price} MAD</Text>
              </View>
             <View style={styles.btns}>
-               
-            
             <TouchableOpacity style={styles.button} onPress={()=>{handleBuy()}}>
               <Text style={styles.textBtn}>Acheter</Text>
             </TouchableOpacity>
@@ -156,7 +157,8 @@ const styles=StyleSheet.create({
     },
     body:{
         fontSize:15,
-        marginBottom:10,
+        marginBottom:15,
+        width:280,
     },
     oneRow:{
         width:200,
@@ -178,8 +180,9 @@ const styles=StyleSheet.create({
           width:Dimensions.get('window').width,
           flexDirection:"row",
           height:50,
-          marginTop:120,
+          position:"absolute",
           paddingLeft:10,
+          bottom:160,
           
     },   
     button:{
@@ -189,7 +192,9 @@ const styles=StyleSheet.create({
             marginHorizontal:60,
             backgroundColor:'#f78f1e',
             borderRadius:25,
-                 
+            
+            
+             
     },
     textBtn:{
         fontSize:20,

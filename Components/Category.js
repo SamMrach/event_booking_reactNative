@@ -4,7 +4,7 @@ export default function Category({category,onclick,path}){
 
     return (
      <TouchableOpacity style={styles.category} onPress={()=>{onclick(category)}}>
-         <Image style={styles.icon} source={category=='theatre' ? require('../assets/theatreIcon.png'):category=='Festivals' ? require('../assets/festival.png'):require('../assets/formation.png') }/>
+         <Image style={styles.icon} source={category=='theatre' ? require('../assets/theatreIcon.png'):category=='Concert' ? require('../assets/festival.png'):require('../assets/formation.png') }/>
          <Text style={styles.text} >{category}</Text>
      </TouchableOpacity>
     )

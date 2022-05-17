@@ -49,8 +49,8 @@ export default function MesCommandes(){
                 title={ticket.event_name}
                 subTitle={ticket.event_description}
                 price={"MAD "+ticket.price}
-                image={require("../assets/event1.png")} // OR {{uri:"http://......"}} 
-                buttonText={"Télecharger Ticket "}
+                image={{uri:'https://printzillas.art'+ticket.path}} // OR {{uri:"http://......"}} 
+                buttonText={"Voir Ticket "}
                 buttonColor={"#f78f1e"}
                 onClickButton={() => handleDownload(ticket.id)}
               />

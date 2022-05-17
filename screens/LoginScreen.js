@@ -5,8 +5,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function LoginScreen() {
     
-    const [email,setEmail]=useState('qqa@gmail.com');
-    const [password,setPassword]=useState('111111');
+    const [email,setEmail]=useState('');
+    const [password,setPassword]=useState('');
     const navigation = useNavigation();
     const handleSignUp = ()=>{
        /* fetch('http://10.0.2.2:8000/api/users/login',{
@@ -19,22 +19,28 @@ export default function LoginScreen() {
            console.log(response.data.user.photo !== null);
            await AsyncStorage.setItem('@username',response.data.user.name);
            await AsyncStorage.setItem('@Id',JSON.stringify(response.data.user.id));
-           if(response.data.user.photo !== null)
-           await AsyncStorage.setItem('@Image',JSON.stringify(response.data.user.photo));
+           if(response.data.user.photo !== null){
+               await AsyncStorage.setItem('@imageSetup','true');
+               await AsyncStorage.setItem('@Image',JSON.stringify(response.data.user.photo));
+           }else{
+            await AsyncStorage.setItem('@imageSetup','false');
+           }
+           
            //let fullName=await AsyncStorage.getItem('@username');
            // console.log(tempofd);
            response.data.user.photo !== null ? navigation.replace('Home') : navigation.replace('Profile');
           
        })
        .catch((error)=>{
-           alert(error);
+           console.log(error);
+           alert('email or password invalid');
        })
         
     }
     return(
         <ImageBackground style={styles.container} resizeMode="cover" source={require('../assets/background_dot.png')}>
       
-        <Text style={styles.header}>Log In</Text> 
+        <Text style={styles.header}>Log in</Text> 
         <TextInput style={styles.input} placeholder="Email"
         label="email"
         value={email}

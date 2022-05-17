@@ -7,6 +7,7 @@ import Event from '../Components/Event'
 import { DrawerLayout } from "react-native-gesture-handler";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {DeviceEventEmitter} from "react-native"
 //import store from 'react-native-simple-store';
 export default function Home(){
     const drawer = useRef(null);
@@ -16,6 +17,10 @@ export default function Home(){
     const [events,setEvents]=useState([]);
     const [favoris,setFavoris]=useState([]);
     const [loading, setLoading] = useState(true);
+    DeviceEventEmitter.addListener("updateProfile", (eventData) =>{
+      setImage(eventData);
+      console.log("event get catched");
+    } )
     //filter favorited events
     const filterFavoris=()=>{
       const favorisEvents=events.filter((event)=>favoris.includes(event.name));
@@ -78,21 +83,38 @@ export default function Home(){
     },[favoris])
 
     useEffect(async() => {
+       let isActive = true;
       
-       let fullName=await AsyncStorage.getItem('@username');
-       setUsername(fullName);
-       const profilImage=await AsyncStorage.getItem('@Image');
-        JSON.parse(profilImage);
-        var length=profilImage.length;
+       try{
+          let fullName=await AsyncStorage.getItem('@username');
+          setUsername(fullName);
+          const imageSetup=await AsyncStorage.getItem('@imageSetup');
+          JSON.parse(imageSetup);
+          if(imageSetup  =='true'){
+            const profilImage=await AsyncStorage.getItem('@Image');
+          
+          var length=profilImage.length;
         var v1=profilImage.slice(1);
         var v2=v1.slice(0,length-2);
+        setImage(v2);
         //console.log(v2);
         //console.log(profilImage.slice(0,length-1));
+        //profilImage === null ? console.log('est null'):setImage(v2);
+          } else{
+
+          }
+          
+        setLoading(false);
+       }
+       catch(e){
+         alert(e);
+       }
+      
         
-        profilImage == null ? console.log('est null'):setImage(v2);
        
        
-       setLoading(false);
+       
+  
        try{
           const favArray= await AsyncStorage.getItem('@favoris');
        const favArray2=JSON.parse(favArray);
@@ -104,16 +126,19 @@ export default function Home(){
        catch(e){
          alert(e);
        }
-        axios.get('https://printzillas.art/api/events')
+       if(isActive){
+         axios.get('https://printzillas.art/api/events')
         .then(res=>{
           //console.log(res.data[0].image)
           
           setEvents(res.data);
-          
+          return ()=>{isActive=false};
         })
         .catch((err)=>{
           alert(err)
         })
+       }
+        
       
     }, [])
     const navigation =useNavigation();
@@ -160,7 +185,7 @@ export default function Home(){
        <ScrollView style={styles.body}>
         <ScrollView style={styles.categories} horizontal>
             <Category category="theatre" onclick={handleClick} path="require('../assets/theatre.png')"/>
-            <Category category="Festivals" onclick={handleClick} path="require('../assets/theatre.png')"/>
+            <Category category="Concert" onclick={handleClick} path="require('../assets/theatre.png')"/>
             <Category category="Formations" onclick={handleClick}path="require('../assets/theatre.png')"/>
             
         </ScrollView>
@@ -168,7 +193,7 @@ export default function Home(){
         <View style={styles.events}>
           {events.map((item,index)=>{
             //console.log(item.name);
-           return(<Event key="{item.id}" id={item.id} name={item.name} category={item.category} description={item.description} price={item.price} localisation={item.localisation} image={item.image} date={item.date} onclick={addOrRemoveToFavoris}  listOfFavoris={favoris}/>)
+           return(<Event key={item.id} id={item.id} name={item.name} category={item.category} description={item.description} price={item.price} localisation={item.localisation} image={item.image} date={item.date} onclick={addOrRemoveToFavoris}  listOfFavoris={favoris}/>)
            
           })}
            
